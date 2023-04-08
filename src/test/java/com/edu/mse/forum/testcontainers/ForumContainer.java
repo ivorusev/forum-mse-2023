@@ -3,7 +3,7 @@ package com.edu.mse.forum.testcontainers;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class ForumContainer extends PostgreSQLContainer<ForumContainer> {
-    private static final String IMAGE_VERSION = "postgres:11.1";
+    private static final String IMAGE_VERSION = "postgres:15.2";
     private static ForumContainer container;
 
     private ForumContainer() {
