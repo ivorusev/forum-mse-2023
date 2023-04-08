@@ -22,6 +22,6 @@ public class TopicEntity extends BaseEntity {
     @Column
     private Long userId;
 
-    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "topic")
     private List<ReplyEntity> replies;
 }
