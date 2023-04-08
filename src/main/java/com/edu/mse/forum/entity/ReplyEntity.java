@@ -2,26 +2,30 @@ package com.edu.mse.forum.entity;
 
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "topics")
-public class TopicEntity extends BaseEntity {
+@Entity(name = "reply")
+public class ReplyEntity extends BaseEntity {
+
+    @ManyToOne
+    @JoinColumn
+    private TopicEntity topic;
 
     @Column
-    private String title;
+    private String text;
 
     @Column
     private Long userId;
 
-    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
-    private List<ReplyEntity> replies;
 }
