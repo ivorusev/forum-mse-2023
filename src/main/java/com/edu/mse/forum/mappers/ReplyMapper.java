@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface ReplyMapper {
 
     @Mapping(target = "topicId", source = "topic.id")
+    @Mapping(target = "userId", source = "userEntity.id")
     ReplyDto toDto(ReplyEntity entity);
 
     ReplyEntity toEntity(ReplyDto dto);

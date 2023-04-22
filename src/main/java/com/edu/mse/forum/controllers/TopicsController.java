@@ -40,7 +40,7 @@ public class TopicsController {
     @GetMapping("{id}")
     public TopicDto getTopicById(@PathVariable("id") long id,
                                  @RequestParam(name = "page", required = false, defaultValue = "0") int page) {
-        TopicDto topicById = topicService.getTopicById(id, page);
+        TopicDto topicById = topicService.getTopicByIdWithReplies(id, page);
         if (topicById == null) {
             LOGGER.info("Topic with id {} was not found, returning 404.", id);
             throw new ResourceNotFoundException("Topic with id " + id + " was not found");

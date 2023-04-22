@@ -1,10 +1,10 @@
 package com.edu.mse.forum.services;
 
-import com.edu.mse.forum.controllers.TopicsController;
 import com.edu.mse.forum.dtos.ReplyDto;
 import com.edu.mse.forum.dtos.TopicDto;
 import com.edu.mse.forum.entity.ReplyEntity;
 import com.edu.mse.forum.entity.TopicEntity;
+import com.edu.mse.forum.entity.UserEntity;
 import com.edu.mse.forum.mappers.ReplyMapper;
 import com.edu.mse.forum.mappers.TopicsMapper;
 import com.edu.mse.forum.repositories.ReplyRepository;
@@ -29,12 +29,15 @@ public class TopicService {
     private static final int PAGE_SIZE = 5;
     private static final Logger LOGGER = LogManager.getLogger(TopicService.class);
     private final TopicRepository topicRepository;
-    private final ReplyRepository replyRepository;
+    private final UserService userService;
     private final ReplyMapper replyMapper;
     private final TopicsMapper topicsMapper;
+    private final ReplyRepository replyRepository;
 
     public TopicDto createTopic(TopicDto topicDto) {
+        UserEntity userByIdOrFail = userService.getUserByIdOrFail(topicDto.getUserId());
         TopicEntity topicEntity = topicsMapper.toEntity(topicDto);
+        topicEntity.setUserEntity(userByIdOrFail);
         TopicEntity savedTopic = topicRepository.save(topicEntity);
         return topicsMapper.toDto(savedTopic);
     }
@@ -45,12 +48,8 @@ public class TopicService {
         return all.getContent().stream().map(topicsMapper::toDto).collect(Collectors.toList());
     }
 
-    public TopicDto getTopicById(long id, int page) {
-        Optional<TopicEntity> topic = topicRepository.findById(id);
-        if (topic.isEmpty()) {
-            throw new EntityNotFoundException("Could not extract topic entity with id " + id);
-        }
-        TopicEntity topicEntity = topic.get();
+    public TopicDto getTopicByIdWithReplies(long id, int page) {
+        TopicEntity topicEntity = getTopicById(id);
         Pageable pageWithFiveItems = PageRequest.of(page, PAGE_SIZE);
         List<ReplyEntity> allByTopic = replyRepository.findAllByTopic(topicEntity, pageWithFiveItems);
         List<ReplyDto> replyDtos = allByTopic.stream().map(replyMapper::toDto).toList();
@@ -60,23 +59,22 @@ public class TopicService {
     }
 
     public TopicDto updateTopicWithId(long id, TopicDto topic) {
-        Optional<TopicEntity> toUpdate = topicRepository.findById(id);
-        if (toUpdate.isEmpty()) {
-            LOGGER.info("Topic with id {} not found", id);
-            throw new EntityNotFoundException("Topic not found");
-        }
-        TopicEntity topicEntityToUpdate = toUpdate.get();
+        TopicEntity topicEntityToUpdate = getTopicById(id);
         topicEntityToUpdate.setTitle(topic.getTitle());
         topicRepository.save(topicEntityToUpdate);
         return topicsMapper.toDto(topicEntityToUpdate);
     }
 
     public void deleteTopicWithId(long id) {
-        Optional<TopicEntity> toDelete = topicRepository.findById(id);
-        if (toDelete.isEmpty()) {
+        topicRepository.delete(getTopicById(id));
+    }
+
+    public TopicEntity getTopicById(long id) {
+        Optional<TopicEntity> optional = topicRepository.findById(id);
+        if (optional.isEmpty()) {
             LOGGER.info("Topic with id {} not found", id);
             throw new EntityNotFoundException("Topic not found");
         }
-        topicRepository.delete(toDelete.get());
+        return optional.get();
     }
 }

@@ -24,6 +24,7 @@ public class ReplyEntity extends BaseEntity {
     private String text;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
 }

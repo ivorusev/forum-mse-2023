@@ -43,6 +43,7 @@ class ForumApplicationTests {
 
 	@Test
 	public void test_createTopic() throws Exception {
+		// TODO: Fix so user is created first
 		this.mockMvc
 				.perform(post("/topics")
 				.contentType(MediaType.APPLICATION_JSON)

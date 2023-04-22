@@ -19,9 +19,12 @@ public class TopicEntity extends BaseEntity {
     @Column
     private String title;
 
-    @Column
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     @OneToMany(mappedBy = "topic")
     private List<ReplyEntity> replies;
+
+
 }

@@ -3,7 +3,6 @@ package com.edu.mse.forum.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +35,10 @@ public class UserEntity extends BaseEntity {
     private Date dateOfBirth;
 
     @Column
-    @OneToMany
+    @OneToMany(mappedBy = "userEntity")
     private List<ReplyEntity> replies;
+
+    @Column
+    @OneToMany(mappedBy = "userEntity")
+    private List<TopicEntity> topics;
 }
