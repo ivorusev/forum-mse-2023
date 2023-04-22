@@ -27,9 +27,7 @@ import java.util.stream.Collectors;
 public class TopicService {
 
     private static final int PAGE_SIZE = 5;
-    private static final Logger LOGGER = LogManager.getLogger(TopicsController.class);
-
-
+    private static final Logger LOGGER = LogManager.getLogger(TopicService.class);
     private final TopicRepository topicRepository;
     private final ReplyRepository replyRepository;
     private final ReplyMapper replyMapper;
@@ -49,7 +47,7 @@ public class TopicService {
 
     public TopicDto getTopicById(long id, int page) {
         Optional<TopicEntity> topic = topicRepository.findById(id);
-        if (!topic.isEmpty()) {
+        if (topic.isEmpty()) {
             throw new EntityNotFoundException("Could not extract topic entity with id " + id);
         }
         TopicEntity topicEntity = topic.get();

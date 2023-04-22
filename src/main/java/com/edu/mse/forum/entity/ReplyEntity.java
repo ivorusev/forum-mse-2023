@@ -2,10 +2,7 @@ package com.edu.mse.forum.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "reply")
+@ToString
 public class ReplyEntity extends BaseEntity {
 
     @ManyToOne
@@ -25,7 +23,7 @@ public class ReplyEntity extends BaseEntity {
     @Column
     private String text;
 
-    @Column
-    private Long userId;
+    @ManyToOne
+    private UserEntity userEntity;
 
 }
